@@ -102,7 +102,7 @@ export function bokehLevel(aperture: number): number {
  * 1/1000秒 で 0、1秒 で 1。対数スケールで補間。
  */
 export function blurRiskLevel(shutterSec: number): number {
-  return clamp01(Math.log2(shutterSec * 1000) / 10);
+  return clamp01(Math.log2(shutterSec * 1000) / Math.log2(1000));
 }
 
 /** ISOからノイズ量（0..1）を算出。ISO 100 で 0、ISO 25600 で 1。 */

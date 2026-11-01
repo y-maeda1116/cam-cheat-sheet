@@ -61,9 +61,9 @@ describe("写りへの影響指標", () => {
     expect(bokehLevel(22)).toBe(0);
   });
 
-  it("blurRiskLevel は1/1000秒で0・1秒でほぼ1", () => {
+  it("blurRiskLevel は1/1000秒で0・1秒で1", () => {
     expect(blurRiskLevel(1 / 1000)).toBe(0);
-    expect(blurRiskLevel(1)).toBeCloseTo(1);
+    expect(blurRiskLevel(1)).toBe(1);
   });
 
   it("noiseLevel は ISO100 で0・ISO25600 で1", () => {
