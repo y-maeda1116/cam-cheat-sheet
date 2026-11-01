@@ -9,7 +9,7 @@ export function createHeader(): HTMLElement {
   const title = el(
     "h1",
     "font-mono text-2xl font-semibold tracking-tight text-ink sm:text-3xl",
-    APP_TITLE,
+    APP_TITLE
   );
   const tagline = el("p", "mt-3 text-sm leading-relaxed text-dim", APP_TAGLINE);
   header.append(title, tagline);

@@ -8,10 +8,7 @@ import { iconEl } from "./icon";
 
 /** シーン1件分の推奨設定カードを生成する */
 export function createSceneCard(scene: Scene): HTMLElement {
-  const card = el(
-    "article",
-    "rounded-xl border border-line bg-panel p-5 flex flex-col gap-4",
-  );
+  const card = el("article", "rounded-xl border border-line bg-panel p-5 flex flex-col gap-4");
   card.setAttribute("aria-label", `${scene.name}の推奨設定`);
 
   const head = el("div", "flex items-center gap-3");

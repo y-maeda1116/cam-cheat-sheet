@@ -31,11 +31,7 @@ function mount(): void {
   const sheetHead = el("div", "flex flex-col gap-1");
   sheetHead.append(
     el("h2", "text-lg font-bold text-ink", "シーン別チートシート"),
-    el(
-      "p",
-      "text-sm text-dim",
-      "目的のタグを選ぶと、条件をすべて満たすシーンに絞り込めます",
-    ),
+    el("p", "text-sm text-dim", "目的のタグを選ぶと、条件をすべて満たすシーンに絞り込めます")
   );
 
   const grid = el("div", "grid gap-5 sm:grid-cols-2");
@@ -48,7 +44,7 @@ function mount(): void {
       onFilterChange: (query, tags) => {
         renderGrid(grid, empty, filterScenes(data.scenes, query, tags));
       },
-    }),
+    })
   );
   main.append(grid, empty);
 

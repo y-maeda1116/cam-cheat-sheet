@@ -10,7 +10,7 @@ import type { Scene, TagId } from "../types";
 export function filterScenes(
   scenes: readonly Scene[],
   query: string,
-  selectedTags: readonly TagId[],
+  selectedTags: readonly TagId[]
 ): Scene[] {
   const normalizedQuery = query.trim().toLowerCase();
   return scenes.filter((scene) => {

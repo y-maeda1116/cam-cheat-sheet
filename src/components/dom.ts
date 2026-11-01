@@ -9,7 +9,7 @@
 export function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   className = "",
-  text = "",
+  text = ""
 ): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag);
   if (className !== "") node.className = className;

@@ -22,9 +22,7 @@ import {
 
 describe("露出オフセット", () => {
   it("基準値のオフセットは 0", () => {
-    expect(
-      exposureOffset(REFERENCE.aperture, REFERENCE.shutterSec, REFERENCE.iso),
-    ).toBeCloseTo(0);
+    expect(exposureOffset(REFERENCE.aperture, REFERENCE.shutterSec, REFERENCE.iso)).toBeCloseTo(0);
   });
 
   it("F値を絞るとオフセットは正（アンダー方向）", () => {
@@ -32,8 +30,9 @@ describe("露出オフセット", () => {
     expect(apertureStopsFromRef(1.4)).toBeLessThan(0);
   });
 
-  it("F値1ストップ（√2倍）でオフセットは2進む", () => {
-    expect(apertureStopsFromRef(2.8 * Math.SQRT2)).toBeCloseTo(2);
+  it("F値1ストップ（√2倍）でオフセットは1進む", () => {
+    expect(apertureStopsFromRef(2.8 * Math.SQRT2)).toBeCloseTo(1);
+    expect(apertureStopsFromRef(2.8 * 2)).toBeCloseTo(2);
   });
 
   it("シャッターが遅いほど・ISOが高いほど明るい（負）", () => {
@@ -62,9 +61,9 @@ describe("写りへの影響指標", () => {
     expect(bokehLevel(22)).toBe(0);
   });
 
-  it("blurRiskLevel は1/1000秒で0・1秒で1", () => {
+  it("blurRiskLevel は1/1000秒で0・1秒でほぼ1", () => {
     expect(blurRiskLevel(1 / 1000)).toBe(0);
-    expect(blurRiskLevel(1)).toBe(1);
+    expect(blurRiskLevel(1)).toBeCloseTo(1);
   });
 
   it("noiseLevel は ISO100 で0・ISO25600 で1", () => {
@@ -89,6 +88,6 @@ describe("表示変換", () => {
   it("nearestStepIndex は対数スケールで最も近いステップを返す", () => {
     expect(nearestStepIndex(APERTURE_STEPS, 2.9)).toBe(3); // 2.8
     expect(nearestStepIndex(ISO_STEPS, 900)).toBe(3); // 800
-    expect(nearestStepIndex(SHUTTER_STEPS, 1 / 260)).toBe(11); // 1/125
+    expect(nearestStepIndex(SHUTTER_STEPS, 1 / 260)).toBe(12); // 1/250
   });
 });

@@ -30,7 +30,8 @@ describe("filterScenes", () => {
       expect(scene.tags).toContain("low-light");
       expect(scene.tags).toContain("handheld");
     }
-    expect(result.map((scene) => scene.id)).toContain("night-star");
+    expect(result.map((scene) => scene.id)).toEqual(["indoor-event"]);
+    expect(filterScenes(scenes, "", ["low-light"]).map((s) => s.id)).toContain("night-star");
   });
 
   it("クエリとタグの両方で絞り込める", () => {

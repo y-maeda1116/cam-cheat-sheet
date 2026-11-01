@@ -90,7 +90,7 @@ export function createExposureSimulator(): HTMLElement {
     key: keyof DialState,
     steps: readonly number[],
     format: (value: number) => string,
-    ariaDesc: string,
+    ariaDesc: string
   ): HTMLElement => {
     const value = el("p", "font-mono text-xl font-semibold text-ink");
     const minus = el("button", "dial-button", "−");
@@ -101,10 +101,7 @@ export function createExposureSimulator(): HTMLElement {
     plus.setAttribute("aria-label", `${label}を明るくする`);
 
     const move = (delta: number): void => {
-      state[key] = Math.max(
-        0,
-        Math.min(steps.length - 1, state[key] + delta),
-      );
+      state[key] = Math.max(0, Math.min(steps.length - 1, state[key] + delta));
       render();
     };
     minus.addEventListener("click", () => move(-1));
@@ -130,10 +127,7 @@ export function createExposureSimulator(): HTMLElement {
     render();
   });
 
-  const dials = el(
-    "div",
-    "grid gap-6 sm:grid-cols-3",
-  );
+  const dials = el("div", "grid gap-6 sm:grid-cols-3");
   dials.append(
     createDial("F値", "aperture", APERTURE_STEPS, (v) => `f/${v}`, "数値が大きいほど暗い"),
     createDial(
@@ -141,35 +135,26 @@ export function createExposureSimulator(): HTMLElement {
       "shutter",
       SHUTTER_STEPS,
       formatShutter,
-      "速度が遅いほど明るい",
+      "速度が遅いほど明るい"
     ),
-    createDial("ISO感度", "iso", ISO_STEPS, (v) => `ISO ${v}`, "感度が高いほど明るい"),
+    createDial("ISO感度", "iso", ISO_STEPS, (v) => `ISO ${v}`, "感度が高いほど明るい")
   );
 
   const meterSection = el("div", "flex flex-col gap-2");
   const meterHead = el("div", "flex items-baseline justify-between gap-4");
   meterHead.append(
     el("p", "text-xs text-dim", "露出オフセット（基準 f/2.8・1/125秒・ISO 400）"),
-    meterOffset,
+    meterOffset
   );
   meterSection.append(meterHead, meterTrack, meterLabel);
 
   const indicators = el("div", "flex flex-col gap-4");
-  indicators.append(
-    el("p", "text-xs text-dim", "設定が写りに与える影響"),
-    preview.root,
-  );
+  indicators.append(el("p", "text-xs text-dim", "設定が写りに与える影響"), preview.root);
 
   const head = el("div", "flex items-baseline justify-between gap-4");
-  head.append(
-    el("h2", "text-lg font-bold text-ink", "露出シミュレーター"),
-    reset,
-  );
+  head.append(el("h2", "text-lg font-bold text-ink", "露出シミュレーター"), reset);
 
-  const root = el(
-    "section",
-    "rounded-xl border border-line bg-panel p-6 flex flex-col gap-6",
-  );
+  const root = el("section", "rounded-xl border border-line bg-panel p-6 flex flex-col gap-6");
   root.setAttribute("aria-label", "露出シミュレーター");
   root.append(head, dials, meterSection, indicators);
 

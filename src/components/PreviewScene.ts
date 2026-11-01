@@ -88,14 +88,8 @@ export function createPreviewScene(): PreviewScene {
       const row = rows[index]!;
       const level = def.level(aperture, shutterSec, iso);
       row.fill.style.width = `${Math.round(level * 100)}%`;
-      row.fill.dataset.warn =
-        row.warnWhenHigh && level >= 0.67 ? "true" : "false";
-      row.status.textContent = levelLabel(
-        level,
-        row.low,
-        row.mid,
-        row.high,
-      );
+      row.fill.dataset.warn = row.warnWhenHigh && level >= 0.67 ? "true" : "false";
+      row.status.textContent = levelLabel(level, row.low, row.mid, row.high);
     });
   };
 

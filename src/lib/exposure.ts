@@ -16,8 +16,23 @@ export const APERTURE_STEPS = [1.4, 1.8, 2, 2.8, 4, 5.6, 8, 11, 16, 22] as const
 
 /** シャッタースピードのステップ（秒） */
 export const SHUTTER_STEPS = [
-  30, 15, 8, 4, 2, 1, 0.5, 0.25, 0.125, 1 / 30, 1 / 60, 1 / 125, 1 / 250,
-  1 / 500, 1 / 1000, 1 / 2000, 1 / 4000,
+  30,
+  15,
+  8,
+  4,
+  2,
+  1,
+  0.5,
+  0.25,
+  0.125,
+  1 / 30,
+  1 / 60,
+  1 / 125,
+  1 / 250,
+  1 / 500,
+  1 / 1000,
+  1 / 2000,
+  1 / 4000,
 ] as const;
 
 /** ISO感度のステップ */
@@ -47,16 +62,8 @@ export function isoStopsFromRef(iso: number): number {
  * - 正   → アンダー（暗すぎる）
  * - 負   → オーバー（明るすぎる）
  */
-export function exposureOffset(
-  aperture: number,
-  shutterSec: number,
-  iso: number,
-): number {
-  return (
-    apertureStopsFromRef(aperture) +
-    shutterStopsFromRef(shutterSec) +
-    isoStopsFromRef(iso)
-  );
+export function exposureOffset(aperture: number, shutterSec: number, iso: number): number {
+  return apertureStopsFromRef(aperture) + shutterStopsFromRef(shutterSec) + isoStopsFromRef(iso);
 }
 
 /** 露出オフセットを -1..1 のメーター値に変換（正＝アンダー側） */
