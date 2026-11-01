@@ -1,0 +1,124 @@
+{
+  "scenes": [
+    {
+      "id": "portrait",
+      "name": "ポートレート",
+      "icon": "user-round",
+      "aperture": 1.8,
+      "shutterSec": 0.004,
+      "iso": 200,
+      "summary": "背景を大きくボかして人物を際立たせる定番設定",
+      "tips": [
+        "開放側（f/1.4〜f/2.8）で背景をぼかし、被写体に視線を集める",
+        "複数人の場合は f/2.8〜f/4 に絞って全員にピントを合わせる",
+        "逆光のときは +0.7〜+1EV の露出補正で顔を明るく"
+      ],
+      "tags": ["bokeh", "low-noise", "handheld"]
+    },
+    {
+      "id": "sports",
+      "name": "動体・スポーツ",
+      "icon": "zap",
+      "aperture": 4,
+      "shutterSec": 0.0005,
+      "iso": 1600,
+      "summary": "一瞬の動きをブレさせずに切り取る高速設定",
+      "tips": [
+        "シャッターは最低 1/1000秒。屋外の全力疾走なら 1/2000秒 以上が安心",
+        "AF-C（サーボAF）+ 連写でピントと瞬間を逃さない",
+        "屋内競技は光が足りないため、ISOオートにしてシャッター優先が有効"
+      ],
+      "tags": ["capture-motion", "anti-shake", "handheld"]
+    },
+    {
+      "id": "night-star",
+      "name": "夜景・星空",
+      "icon": "moon-star",
+      "aperture": 2.8,
+      "shutterSec": 30,
+      "iso": 3200,
+      "summary": "限界まで光を集める三脚必須のロングシャッター設定",
+      "tips": [
+        "星空は「500ルール」（500÷焦点距離=露出秒数）を上限にブレを防ぐ",
+        "高感度ノイズ低減・長秒ノイズ低減をONに",
+        "街灯の近くでは光害の影響が出るため、ISOを下げて調整"
+      ],
+      "tags": ["low-light", "tripod", "bokeh"]
+    },
+    {
+      "id": "street",
+      "name": "街角スナップ",
+      "icon": "building-2",
+      "aperture": 5.6,
+      "shutterSec": 0.002,
+      "iso": 800,
+      "summary": "被写界深度を確保して、突然のシャッターチャンスに即応する設定",
+      "tips": [
+        "f/5.6〜f/8 のパンフォーカス気味にしてピント外しを防ぐ",
+        "ISOオート（上限3200など）にしてシャッター速度を維持",
+        "歩きながらでも手ブレしにくい 1/250秒 以上をキープ"
+      ],
+      "tags": ["pan-focus", "anti-shake", "handheld"]
+    },
+    {
+      "id": "landscape",
+      "name": "風景・パンフォーカス",
+      "icon": "mountain",
+      "aperture": 11,
+      "shutterSec": 0.008,
+      "iso": 100,
+      "summary": "手前から奥まで全体にピントを合わせる低感度設定",
+      "tips": [
+        "f/8〜f/11 が回折とボケのバランスが良い「シャープゾーン」",
+        "ISOは最低感度でテクスチャを保存",
+        "手持ちでもブレにくいが、風の強い日は三脚が安心"
+      ],
+      "tags": ["pan-focus", "daylight", "low-noise"]
+    },
+    {
+      "id": "waterfall",
+      "name": "水の流れ（滝・川）",
+      "icon": "waves",
+      "aperture": 11,
+      "shutterSec": 1,
+      "iso": 100,
+      "summary": "スローシャッターで水をシルクのように描画する設定",
+      "tips": [
+        "1/4〜2秒でしっとり、5秒以上で霧のような描写に",
+        "必ず三脚+レリーズ（またはタイマー）を使用",
+        "日中はNDフィルターがあると過露出を防げる"
+      ],
+      "tags": ["tripod", "daylight"]
+    },
+    {
+      "id": "railway",
+      "name": "鉄道・乗り物",
+      "icon": "train-front",
+      "aperture": 5.6,
+      "shutterSec": 0.001,
+      "iso": 800,
+      "summary": "等速で迫る被写体をピタッと止める設定",
+      "tips": [
+        "通過シーンは 1/1000秒 以上。流し撮りなら 1/60〜1/125秒",
+        "流し撮りは AF-C + 動体予測で追従精度を上げる",
+        "ホームでの撮影は安全範囲と周囲への配慮を最優先に"
+      ],
+      "tags": ["capture-motion", "handheld"]
+    },
+    {
+      "id": "indoor-event",
+      "name": "室内イベント・コンサート",
+      "icon": "music",
+      "aperture": 2.8,
+      "shutterSec": 0.004,
+      "iso": 6400,
+      "summary": "暗い会場でフラッシュを使わず光を活かす高感度設定",
+      "tips": [
+        "ISO 6400〜12800 は現代機なら実用域。思い切って上げる",
+        "ステージの明滅に合わせ、シャッターは 1/250秒 前後を維持",
+        "会場規約でフラッシュ・三脚が禁止のことが多いので手持ち前提で"
+      ],
+      "tags": ["low-light", "low-noise", "handheld"]
+    }
+  ]
+}

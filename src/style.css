@@ -1,0 +1,166 @@
+/* カメラのトッププレートを模したダークテーマ。
+   アクセントは液晶のアンバー発光 1 色に集約する。 */
+
+@import "tailwindcss";
+
+@theme {
+  --color-body: #17181b;
+  --color-panel: #1f2126;
+  --color-line: #2e3138;
+  --color-lcd: #f2a93b;
+  --color-lcd-dark: #3a2f18;
+  --color-warn: #e5484d;
+  --color-ink: #e9e7e2;
+  --color-dim: #9a9da6;
+  --font-sans: "Noto Sans JP", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+body {
+  background-color: var(--color-body);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-lcd);
+  outline-offset: 2px;
+}
+
+/* --- 検索入力 --- */
+.search-input {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+  background-color: var(--color-body);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--color-ink);
+}
+
+.search-input::placeholder {
+  color: var(--color-dim);
+}
+
+/* --- タグチップ --- */
+.tag-chip {
+  border: 1px solid var(--color-line);
+  border-radius: 9999px;
+  padding: 0.25rem 0.875rem;
+  font-size: 0.75rem;
+  color: var(--color-dim);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.tag-chip:hover {
+  border-color: var(--color-dim);
+  color: var(--color-ink);
+}
+
+.tag-chip[data-active="true"] {
+  border-color: var(--color-lcd);
+  background-color: var(--color-lcd-dark);
+  color: var(--color-lcd);
+}
+
+/* --- カード内タグ --- */
+.tag-badge {
+  border: 1px solid var(--color-line);
+  border-radius: 9999px;
+  padding: 0.125rem 0.625rem;
+  font-size: 0.6875rem;
+  color: var(--color-dim);
+}
+
+/* --- ダイヤルボタン --- */
+.dial-button {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 0.375rem;
+  background-color: var(--color-body);
+  color: var(--color-ink);
+  font-size: 1rem;
+  line-height: 1;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.dial-button:hover:not(:disabled) {
+  border-color: var(--color-lcd);
+  color: var(--color-lcd);
+}
+
+.dial-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.reset-button {
+  border: 1px solid var(--color-line);
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.75rem;
+  color: var(--color-dim);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.reset-button:hover {
+  border-color: var(--color-dim);
+  color: var(--color-ink);
+}
+
+/* --- 露出計（中央基準。右寄り＝アンダー、左寄り＝オーバー） --- */
+.exposure-meter-track {
+  position: relative;
+  height: 0.625rem;
+  border: 1px solid var(--color-line);
+  border-radius: 0.25rem;
+  background-color: var(--color-body);
+  overflow: hidden;
+}
+
+.exposure-meter-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: var(--color-lcd);
+  transition: left 0.2s ease, width 0.2s ease;
+}
+
+.exposure-meter-center {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background-color: var(--color-dim);
+}
+
+/* --- 指標バー --- */
+.meter-track {
+  height: 0.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: 0.25rem;
+  background-color: var(--color-body);
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  background-color: var(--color-lcd);
+  transition: width 0.2s ease;
+}
+
+.meter-fill[data-warn="true"] {
+  background-color: var(--color-warn);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

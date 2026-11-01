@@ -1,116 +1,47 @@
-# TypeScript Template Base
+# cam-cheat-sheet
 
-A cross-platform TypeScript template repository optimized for Node.js tool development with consideration for future web frontend (React) migration.
+シーン別のカメラ推奨設定と露出の3要素（F値・シャッタースピード・ISO）を、撮影前にサッと確認できるチートシート。GitHub Pages で公開する静的サイトです。
 
-## Features
+## 機能
 
-- TypeScript 7 (Go-based, ~10x faster) with strict mode
-- Hot-reload development with `tsx`
-- Dual CJS/ESM build with `tsup`
-- Testing with Vitest
-- Linting with ESLint (flat config)
-- Formatting with Prettier
-- Environment variable validation with Zod
-- CI/CD with GitHub Actions (Ubuntu, Windows, macOS)
+- **露出シミュレーター**: 3つのダイヤル操作で露出オフセット（EV）と、ボケ量・ブレリスク・ノイズへの影響を確認
+- **シーン別チートシート**: ポートレート・スポーツ・夜景など8シーンの推奨設定と解説
+- **検索・タグ絞り込み**: シーン名検索と、目的タグ（AND条件）でのフィルタリング
+
+## 技術スタック
+
+- TypeScript 7（strict mode）
+- Vite 8 + Tailwind CSS v4
+- Vitest
+- lucide（アイコン）
+- DOM API のみでレンダリング（innerHTML 不使用）
 
 ## Requirements
 
-- Node.js >= 20.0.0
+- Node.js >= 22.12.0
 - npm
-
-## Setup
-
-1. Clone the repository
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Create environment file:
-
-```bash
-cp .env.example .env
-```
-
-4. Edit `.env` with your actual values:
-
-```env
-DISCORD_TOKEN=your_discord_bot_token_here
-DEEPL_AUTH_KEY=your_deepl_auth_key_here
-```
 
 ## Development
 
-Run in development mode with hot-reload:
-
 ```bash
+npm install
 npm run dev
 ```
 
-## Testing
-
-Run tests:
+## Verification
 
 ```bash
-npm test
+npm run typecheck   # tsc による型チェック
+npm run lint        # ESLint
+npm test            # Vitest
+npm run build       # 本番ビルド（dist/）
 ```
 
-Run tests in watch mode:
+## Deployment
 
-```bash
-npm run test:watch
-```
+`main` ブランチへの push で GitHub Actions（`.github/workflows/deploy.yml`）がビルドし、GitHub Pages へデプロイします。
 
-## Type Checking
-
-Run type checking with the native TypeScript 7 `tsc`:
-
-```bash
-npm run typecheck
-```
-
-> **Note:** TypeScript 7 does not yet ship the JavaScript compiler API that `typescript-eslint` (and `tsup`) depend on.
-> Following the [upstream side-by-side guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0),
-> `@typescript/native` is an alias for `typescript@7` (provides `tsc`), while `typescript` is an alias for
-> `@typescript/typescript6` so tools importing the `typescript` API get the supported 6.x API.
-
-## Build
-
-Build for production:
-
-```bash
-npm run build
-```
-
-Run built files:
-
-```bash
-npm start
-```
-
-## Linting and Formatting
-
-Lint code:
-
-```bash
-npm run lint
-```
-
-Format code:
-
-```bash
-npm run format
-```
-
-## Environment Variables
-
-The following environment variables are required (customize for your project):
-
-| Variable | Description |
-|----------|-------------|
-| `DISCORD_TOKEN` | Discord bot token (example) |
-| `DEEPL_AUTH_KEY` | DeepL API key (example) |
+初回のみ、リポジトリ設定で **Settings → Pages → Source を「GitHub Actions」** に変更してください。
 
 ## License
 
