@@ -2,7 +2,7 @@
 
 import { TAG_DEFS } from "../config";
 import type { TagId } from "../types";
-import { APERTURE_STEPS, ISO_STEPS, SHUTTER_STEPS, nearestStepIndex } from "./exposure";
+import { APERTURE_STEPS, ISO_STEPS, ND_STEPS, SHUTTER_STEPS, nearestStepIndex } from "./exposure";
 
 /** 検索・タグ絞り込みの状態 */
 export interface FilterState {
@@ -10,11 +10,12 @@ export interface FilterState {
   tags: TagId[];
 }
 
-/** シミュレーターのダイヤル値 */
+/** シミュレーターのダイヤル値（nd は減光ストップ数、省略時 0） */
 export interface SimulatorValues {
   aperture: number;
   shutterSec: number;
   iso: number;
+  nd?: number;
 }
 
 /** URLに保存するアプリ状態 */
@@ -28,18 +29,23 @@ const knownTagIds = new Set<string>(TAG_DEFS.map((tag) => tag.id));
 /** 有効なダイヤル値（ステップ配列の範囲内）に変換できた場合のみ返す */
 function normalizeSimulator(raw: string): SimulatorValues | null {
   const parts = raw.split(",");
-  if (parts.length !== 3) return null;
-  const [apertureRaw, shutterRaw, isoRaw] = parts;
+  if (parts.length < 3 || parts.length > 4) return null;
+  const [apertureRaw, shutterRaw, isoRaw, ndRaw] = parts;
   const aperture = Number(apertureRaw);
   const shutterSec = Number(shutterRaw);
   const iso = Number(isoRaw);
   if (![aperture, shutterSec, iso].every((value) => Number.isFinite(value) && value > 0)) {
     return null;
   }
+  const nd =
+    ndRaw === undefined || !Number.isFinite(Number(ndRaw)) || Number(ndRaw) <= 0
+      ? undefined
+      : ND_STEPS[nearestStepIndex(ND_STEPS, Number(ndRaw))]!;
   return {
     aperture: APERTURE_STEPS[nearestStepIndex(APERTURE_STEPS, aperture)]!,
     shutterSec: SHUTTER_STEPS[nearestStepIndex(SHUTTER_STEPS, shutterSec)]!,
     iso: ISO_STEPS[nearestStepIndex(ISO_STEPS, iso)]!,
+    ...(nd === undefined ? {} : { nd }),
   };
 }
 
@@ -49,7 +55,8 @@ export function encodeAppState(filter: FilterState, simulator: SimulatorValues |
   if (filter.query.trim() !== "") params.set("q", filter.query.trim());
   if (filter.tags.length > 0) params.set("tags", filter.tags.join(","));
   if (simulator !== null) {
-    params.set("sim", `${simulator.aperture},${simulator.shutterSec},${simulator.iso}`);
+    const nd = simulator.nd !== undefined && simulator.nd > 0 ? `,${simulator.nd}` : "";
+    params.set("sim", `${simulator.aperture},${simulator.shutterSec},${simulator.iso}${nd}`);
   }
   return params.toString();
 }
