@@ -31,6 +31,13 @@ export function createSceneCard(scene: Scene): HTMLElement {
 
   const summary = el("p", "text-sm leading-relaxed text-dim", scene.summary);
 
+  const failureNote = el(
+    "p",
+    "flex items-start gap-2 rounded-lg border border-warn/40 bg-warn/10 p-2.5 text-sm leading-relaxed text-ink"
+  );
+  failureNote.append(iconEl("triangle-alert", "size-4 shrink-0 text-warn"));
+  failureNote.append(el("span", undefined, scene.failure));
+
   const tips = el("ul", "flex flex-col gap-1.5 text-sm leading-relaxed text-ink");
   for (const tip of scene.tips) {
     const item = el("li", "flex gap-2");
@@ -45,6 +52,6 @@ export function createSceneCard(scene: Scene): HTMLElement {
     tags.append(el("span", "tag-badge", tagLabel(id)));
   }
 
-  card.append(head, settings, summary, tips, tags);
+  card.append(head, settings, summary, failureNote, tips, tags);
   return card;
 }

@@ -19,6 +19,8 @@ export interface Scene {
   iso: number;
   /** 一行解説 */
   summary: string;
+  /** あるある失敗と対策（1行） */
+  failure: string;
   /** 解説・注意点 */
   tips: string[];
   /** 目的・悩みタグ */
