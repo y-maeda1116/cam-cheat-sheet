@@ -77,6 +77,15 @@ function mount(): void {
 
   app.replaceChildren(main);
   renderGrid(grid, empty, filterScenes(data.scenes, currentQuery, currentTags));
+
+  // PWA: 撮影現場など圏外でも開けるようサービスワーカーを登録する
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      void navigator.serviceWorker.register("./sw.js").catch(() => {
+        /* 登録失敗はオフライン機能が無効になるだけでアプリは動作する */
+      });
+    });
+  }
 }
 
 mount();
