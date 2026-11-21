@@ -11,6 +11,7 @@ import {
   formatShutter,
   nearestStepIndex,
 } from "../lib/exposure";
+import type { SimulatorValues } from "../lib/urlState";
 import { el } from "./dom";
 import { createPreviewScene } from "./PreviewScene";
 
@@ -36,11 +37,18 @@ interface DialRefs {
  * 基準値（f/2.8, 1/125秒, ISO 400）からのオフセットで適正露出を判定し、
  * F値・シャッター・ISOのダイヤル操作で露出計と3指標を更新する。
  */
-export function createExposureSimulator(): HTMLElement {
+export interface ExposureSimulatorOptions {
+  /** 復元する初期値（URL共有など） */
+  initial?: SimulatorValues;
+  /** ダイヤル操作で値が変わるたびに呼ばれる */
+  onChange?: (values: SimulatorValues) => void;
+}
+
+export function createExposureSimulator(options: ExposureSimulatorOptions = {}): HTMLElement {
   const state: DialState = {
-    aperture: nearestStepIndex(APERTURE_STEPS, REFERENCE.aperture),
-    shutter: nearestStepIndex(SHUTTER_STEPS, REFERENCE.shutterSec),
-    iso: nearestStepIndex(ISO_STEPS, REFERENCE.iso),
+    aperture: nearestStepIndex(APERTURE_STEPS, options.initial?.aperture ?? REFERENCE.aperture),
+    shutter: nearestStepIndex(SHUTTER_STEPS, options.initial?.shutterSec ?? REFERENCE.shutterSec),
+    iso: nearestStepIndex(ISO_STEPS, options.initial?.iso ?? REFERENCE.iso),
   };
 
   const preview = createPreviewScene();
@@ -83,6 +91,7 @@ export function createExposureSimulator(): HTMLElement {
     meterLabel.textContent = exposureLabel(offset);
 
     preview.update(aperture, shutterSec, iso);
+    options.onChange?.({ aperture, shutterSec, iso });
   };
 
   const createDial = (
