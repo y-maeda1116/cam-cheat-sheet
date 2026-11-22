@@ -38,6 +38,9 @@ export const SHUTTER_STEPS = [
 /** ISO感度のステップ */
 export const ISO_STEPS = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600] as const;
 
+/** NDフィルターの減光ストップ数（0=なし、3=ND8、6=ND64、10=ND1000） */
+export const ND_STEPS = [0, 3, 6, 10] as const;
+
 /**
  * F値の基準からのストップ数（明るいほど負、暗いほど正）。
  * F値は1ストップで √2 倍になるため 2*log2 で計算。
@@ -57,13 +60,59 @@ export function isoStopsFromRef(iso: number): number {
 }
 
 /**
- * 3要素を合算した露出オフセット（ストップ数）。
+ * 3要素（+ND減光）を合算した露出オフセット（ストップ数）。
  * - 0    → 適正露出（基準どおり）
  * - 正   → アンダー（暗すぎる）
  * - 負   → オーバー（明るすぎる）
  */
-export function exposureOffset(aperture: number, shutterSec: number, iso: number): number {
-  return apertureStopsFromRef(aperture) + shutterStopsFromRef(shutterSec) + isoStopsFromRef(iso);
+export function exposureOffset(
+  aperture: number,
+  shutterSec: number,
+  iso: number,
+  ndStops = 0
+): number {
+  return (
+    apertureStopsFromRef(aperture) +
+    shutterStopsFromRef(shutterSec) +
+    isoStopsFromRef(iso) +
+    ndStops
+  );
+}
+
+/** 適正化提案の内容（どのダイヤルをどこへ動かすか） */
+export interface CompensationSuggestion {
+  dial: "shutter" | "iso";
+  from: number;
+  to: number;
+}
+
+/**
+ * 適正露出（0EV）に最も近づくダイヤル操作を提案する。
+ * まずシャッター、次に ISO で解消を試み、どちらも動かせなければ null。
+ * |offset| < 0.5（適正圏内）のときも null。
+ */
+export function suggestCompensation(
+  aperture: number,
+  shutterSec: number,
+  iso: number,
+  ndStops = 0
+): CompensationSuggestion | null {
+  const offset = exposureOffset(aperture, shutterSec, iso, ndStops);
+  if (Math.abs(offset) < 0.5) return null;
+
+  // offset が正（アンダー）なら 2^offset 倍明るくする方向へ
+  const shutterCandidate =
+    SHUTTER_STEPS[nearestStepIndex(SHUTTER_STEPS, shutterSec * 2 ** offset)]!;
+  if (shutterCandidate !== shutterSec) {
+    return { dial: "shutter", from: shutterSec, to: shutterCandidate };
+  }
+
+  const isoCandidate = ISO_STEPS[nearestStepIndex(ISO_STEPS, iso * 2 ** offset)]!;
+  if (isoCandidate !== iso) {
+    return { dial: "iso", from: iso, to: isoCandidate };
+  }
+
+  return null;
 }
 
 /** 露出オフセットを -1..1 のメーター値に変換（正＝アンダー側） */

@@ -3,6 +3,7 @@
 import {
   APERTURE_STEPS,
   ISO_STEPS,
+  ND_STEPS,
   REFERENCE,
   SHUTTER_STEPS,
   exposureLabel,
@@ -10,16 +11,21 @@ import {
   exposureOffset,
   formatShutter,
   nearestStepIndex,
+  suggestCompensation,
 } from "../lib/exposure";
 import type { SimulatorValues } from "../lib/urlState";
 import { el } from "./dom";
 import { createPreviewScene } from "./PreviewScene";
+
+/** ND フィルターの表示ラベル（ND_STEPS と同順） */
+const ND_LABELS = ["なし", "ND8", "ND64", "ND1000"] as const;
 
 /** ダイヤルの状態（ステップ配列のインデックスで管理する） */
 interface DialState {
   aperture: number;
   shutter: number;
   iso: number;
+  nd: number;
 }
 
 /** ダイヤル1個分の DOM 参照 */
@@ -49,6 +55,7 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
     aperture: nearestStepIndex(APERTURE_STEPS, options.initial?.aperture ?? REFERENCE.aperture),
     shutter: nearestStepIndex(SHUTTER_STEPS, options.initial?.shutterSec ?? REFERENCE.shutterSec),
     iso: nearestStepIndex(ISO_STEPS, options.initial?.iso ?? REFERENCE.iso),
+    nd: nearestStepIndex(ND_STEPS, options.initial?.nd ?? 0),
   };
 
   const preview = createPreviewScene();
@@ -61,6 +68,7 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
 
   const meterOffset = el("p", "font-mono text-lg font-semibold text-lcd");
   const meterLabel = el("p", "text-xs text-dim");
+  const meterSuggest = el("p", "text-xs text-lcd");
 
   const dialRefs: DialRefs[] = [];
 
@@ -76,7 +84,8 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
       dial.plus.disabled = state[dial.key] === dial.steps.length - 1;
     }
 
-    const offset = exposureOffset(aperture, shutterSec, iso);
+    const ndStops = ND_STEPS[state.nd]!;
+    const offset = exposureOffset(aperture, shutterSec, iso, ndStops);
     const meter = exposureMeter(offset);
     const width = Math.round(Math.abs(meter) * 50);
     if (meter >= 0) {
@@ -90,8 +99,17 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
     meterOffset.textContent = `${offset >= 0 ? "+" : ""}${offset.toFixed(1)} EV`;
     meterLabel.textContent = exposureLabel(offset);
 
+    const suggestion = suggestCompensation(aperture, shutterSec, iso, ndStops);
+    if (suggestion === null) {
+      meterSuggest.textContent = "";
+    } else if (suggestion.dial === "shutter") {
+      meterSuggest.textContent = `適正へ寄せる例: シャッター ${formatShutter(suggestion.from)} → ${formatShutter(suggestion.to)}`;
+    } else {
+      meterSuggest.textContent = `適正へ寄せる例: ISO ${suggestion.from} → ISO ${suggestion.to}`;
+    }
+
     preview.update(aperture, shutterSec, iso);
-    options.onChange?.({ aperture, shutterSec, iso });
+    options.onChange?.({ aperture, shutterSec, iso, nd: ndStops });
   };
 
   const createDial = (
@@ -133,10 +151,11 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
     state.aperture = nearestStepIndex(APERTURE_STEPS, REFERENCE.aperture);
     state.shutter = nearestStepIndex(SHUTTER_STEPS, REFERENCE.shutterSec);
     state.iso = nearestStepIndex(ISO_STEPS, REFERENCE.iso);
+    state.nd = 0;
     render();
   });
 
-  const dials = el("div", "grid gap-6 sm:grid-cols-3");
+  const dials = el("div", "grid gap-6 sm:grid-cols-2 lg:grid-cols-4");
   dials.append(
     createDial("F値", "aperture", APERTURE_STEPS, (v) => `f/${v}`, "数値が大きいほど暗い"),
     createDial(
@@ -146,7 +165,14 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
       formatShutter,
       "速度が遅いほど明るい"
     ),
-    createDial("ISO感度", "iso", ISO_STEPS, (v) => `ISO ${v}`, "感度が高いほど明るい")
+    createDial("ISO感度", "iso", ISO_STEPS, (v) => `ISO ${v}`, "感度が高いほど明るい"),
+    createDial(
+      "NDフィルター",
+      "nd",
+      ND_STEPS,
+      (v) => ND_LABELS[ND_STEPS.findIndex((step) => step === v)] ?? "なし",
+      "減光量が多いほど暗い"
+    )
   );
 
   const meterSection = el("div", "flex flex-col gap-2");
@@ -155,7 +181,7 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
     el("p", "text-xs text-dim", "露出オフセット（基準 f/2.8・1/125秒・ISO 400）"),
     meterOffset
   );
-  meterSection.append(meterHead, meterTrack, meterLabel);
+  meterSection.append(meterHead, meterTrack, meterLabel, meterSuggest);
 
   const indicators = el("div", "flex flex-col gap-4");
   indicators.append(el("p", "text-xs text-dim", "設定が写りに与える影響"), preview.root);

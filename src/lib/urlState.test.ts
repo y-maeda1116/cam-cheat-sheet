@@ -81,3 +81,25 @@ describe("decodeAppState", () => {
     expect(decoded.filter.tags).toEqual(["tripod"]);
   });
 });
+
+describe("ND フィルターを含む sim のエンコード・復元", () => {
+  it("ND ありのシミュレーター状態をラウンドトリップできる", () => {
+    const sim = { aperture: 11, shutterSec: 1, iso: 100, nd: 3 };
+    const decoded = decodeAppState(encodeAppState({ query: "", tags: [] }, sim));
+    expect(decoded.simulator).toEqual(sim);
+  });
+
+  it("ND 値は最も近いステップ（0/3/6/10）に丸められる", () => {
+    const decoded = decodeAppState("sim=11,1,100,4");
+    expect(decoded.simulator?.nd).toBe(3);
+  });
+
+  it("3項目のみの従来形式も引き続き受け付ける", () => {
+    const decoded = decodeAppState("sim=2.8,0.008,400");
+    expect(decoded.simulator).toEqual({ aperture: 2.8, shutterSec: 0.008, iso: 400 });
+  });
+
+  it("5項目以上は不正として無視される", () => {
+    expect(decodeAppState("sim=2.8,0.008,400,3,9").simulator).toBeNull();
+  });
+});
