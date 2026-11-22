@@ -57,3 +57,23 @@ describe("createGlossary", () => {
     expect(details?.textContent).toContain(entry.body);
   });
 });
+
+describe("createGlossary: カスタム見出し", () => {
+  beforeEach(() => {
+    document.body.replaceChildren();
+  });
+
+  it("options でタイトル・説明・aria-label を差し替えられる", () => {
+    const section = createGlossary(data.groups, {
+      title: "α7 III 系ショートカット・便利技",
+      subtitle: "操作ガイド",
+      ariaLabel: "αショートカット",
+    });
+    document.body.append(section);
+
+    const h2 = section.querySelector("h2");
+    expect(h2?.textContent).toBe("α7 III 系ショートカット・便利技");
+    expect(section.textContent).toContain("操作ガイド");
+    expect(section.getAttribute("aria-label")).toBe("αショートカット");
+  });
+});
