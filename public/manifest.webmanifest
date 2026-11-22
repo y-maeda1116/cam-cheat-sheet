@@ -1,0 +1,19 @@
+{
+  "name": "カメラ設定チートシート",
+  "short_name": "カメラ設定",
+  "description": "シーン別のカメラ推奨設定と露出の3要素を、撮影前にサッと確認できるチートシート",
+  "lang": "ja",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#17181b",
+  "theme_color": "#17181b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

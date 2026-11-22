@@ -67,6 +67,8 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
   meterTrack.append(el("div", "exposure-meter-center"));
 
   const meterOffset = el("p", "font-mono text-lg font-semibold text-lcd");
+  meterOffset.setAttribute("role", "status");
+  meterOffset.setAttribute("aria-live", "polite");
   const meterLabel = el("p", "text-xs text-dim");
   const meterSuggest = el("p", "text-xs text-lcd");
 
