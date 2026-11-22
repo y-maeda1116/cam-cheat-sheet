@@ -16,6 +16,27 @@
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
+/* OS のライト表示では紙面を模したライト版へ切り替える */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-body: #f4f2ee;
+    --color-panel: #ffffff;
+    --color-line: #e3e0d8;
+    --color-lcd: #a05e0a;
+    --color-lcd-dark: #fbeed8;
+    --color-warn: #cb2f3a;
+    --color-ink: #211f1a;
+    --color-dim: #6f727c;
+    color-scheme: light;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
 body {
   background-color: var(--color-body);
   color: var(--color-ink);
