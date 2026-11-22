@@ -1,6 +1,7 @@
 /** Vite エントリポイント: ページを組み立て、検索・タグ絞り込みを配線する */
 
 import "./style.css";
+import alphaTips from "./data/alphaTips.json";
 import cameraSettings from "./data/cameraSettings.json";
 import glossary from "./data/glossary.json";
 import { createExposureSimulator } from "./components/ExposureSimulator";
@@ -16,6 +17,7 @@ import type { CameraSettingsData, GlossaryData, Scene } from "./types";
 
 const data = cameraSettings as CameraSettingsData;
 const terms = glossary as GlossaryData;
+const tips = alphaTips as GlossaryData;
 
 const EMPTY_MESSAGE = "一致するシーンがありません。検索条件を変えてみてください。";
 
@@ -92,6 +94,14 @@ function mount(): void {
   );
   main.append(grid, empty);
   main.append(createGlossary(terms.groups));
+  main.append(
+    createGlossary(tips.groups, {
+      title: "α7 III 系ショートカット・便利技",
+      subtitle:
+        "α7 III / α7R III / α7S III 想定の操作ガイド。項目名や初期割り当てはファームウェアで多少異なることがあります",
+      ariaLabel: "α7 III 系ショートカット・便利技",
+    })
+  );
 
   app.replaceChildren(main);
   renderGrid(grid, empty, filterScenes(data.scenes, currentQuery, currentTags), loadIntoSimulator);

@@ -3,17 +3,33 @@
 import type { GlossaryGroup } from "../types";
 import { el } from "./dom";
 
+export interface GlossaryOptions {
+  /** セクション見出し（デフォルト: 用語ミニ辞書） */
+  title?: string;
+  /** 見出しの下の説明文 */
+  subtitle?: string;
+  /** アクセシビリティ用ラベル（デフォルト: 用語集） */
+  ariaLabel?: string;
+}
+
 /**
  * 用語集セクションを生成する。
  * 各用語は <details>/<summary> で開閉し、JavaScript なしで動作する。
  */
-export function createGlossary(groups: readonly GlossaryGroup[]): HTMLElement {
+export function createGlossary(
+  groups: readonly GlossaryGroup[],
+  options: GlossaryOptions = {}
+): HTMLElement {
   const section = el("section", "flex flex-col gap-6");
-  section.setAttribute("aria-label", "用語集");
+  section.setAttribute("aria-label", options.ariaLabel ?? "用語集");
 
   section.append(
-    el("h2", "text-lg font-bold text-ink", "用語ミニ辞書"),
-    el("p", "text-sm text-dim", "露出の基礎と、シーン解説で触れるカメラ側の設定をまとめました")
+    el("h2", "text-lg font-bold text-ink", options.title ?? "用語ミニ辞書"),
+    el(
+      "p",
+      "text-sm text-dim",
+      options.subtitle ?? "露出の基礎と、シーン解説で触れるカメラ側の設定をまとめました"
+    )
   );
 
   for (const group of groups) {

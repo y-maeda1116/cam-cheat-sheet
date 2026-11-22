@@ -7,7 +7,13 @@ test.describe("初期表示", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("カメラ設定チートシート");
     await expect(page.getByRole("article")).toHaveCount(17);
     await expect(page.getByRole("heading", { name: "用語ミニ辞書" })).toBeVisible();
-    await expect(page.locator("details")).toHaveCount(12);
+    await expect(page.locator("section[aria-label='用語集'] details")).toHaveCount(12);
+    await expect(
+      page.getByRole("heading", { name: "α7 III 系ショートカット・便利技" })
+    ).toBeVisible();
+    await expect(
+      page.locator("section[aria-label='α7 III 系ショートカット・便利技'] details")
+    ).toHaveCount(13);
   });
 
   test("サービスワーカーが登録される", async ({ page }) => {
