@@ -23,7 +23,8 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src index.html",
     "format:check": "prettier --check src index.html",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:e2e": "playwright test"
   },
   "lint-staged": {
     "src/**/*.ts": [
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/vite": "^4.3.5",
     "@typescript/native": "npm:typescript@7.1.0-beta",
     "@vitest/coverage-v8": "^5.1.0",

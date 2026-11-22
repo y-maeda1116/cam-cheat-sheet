@@ -37,6 +37,7 @@ npm run dev
 npm run typecheck   # tsc による型チェック
 npm run lint        # ESLint
 npm test            # Vitest
+npm run test:e2e    # Playwright E2E（事前に npx playwright install chromium）
 npm run build       # 本番ビルド（dist/）
 ```
 
