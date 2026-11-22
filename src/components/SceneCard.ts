@@ -6,8 +6,13 @@ import type { Scene } from "../types";
 import { el } from "./dom";
 import { iconEl } from "./icon";
 
+export interface SceneCardOptions {
+  /** 「シミュレーターで試す」がクリックされたときに呼ばれる */
+  onSimulate?: (scene: Scene) => void;
+}
+
 /** シーン1件分の推奨設定カードを生成する */
-export function createSceneCard(scene: Scene): HTMLElement {
+export function createSceneCard(scene: Scene, options: SceneCardOptions = {}): HTMLElement {
   const card = el("article", "rounded-xl border border-line bg-panel p-5 flex flex-col gap-4");
   card.setAttribute("aria-label", `${scene.name}の推奨設定`);
 
@@ -52,6 +57,17 @@ export function createSceneCard(scene: Scene): HTMLElement {
     tags.append(el("span", "tag-badge", tagLabel(id)));
   }
 
-  card.append(head, settings, summary, failureNote, tips, tags);
+  const footer = el("div", "flex justify-end");
+  if (options.onSimulate !== undefined) {
+    const simulate = el("button", "reset-button", "シミュレーターで試す");
+    simulate.type = "button";
+    simulate.setAttribute("aria-label", `${scene.name}の推奨設定をシミュレーターで試す`);
+    simulate.addEventListener("click", () => {
+      options.onSimulate?.(scene);
+    });
+    footer.append(simulate);
+  }
+
+  card.append(head, settings, summary, failureNote, tips, tags, footer);
   return card;
 }

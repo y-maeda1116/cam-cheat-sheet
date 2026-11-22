@@ -50,7 +50,14 @@ export interface ExposureSimulatorOptions {
   onChange?: (values: SimulatorValues) => void;
 }
 
-export function createExposureSimulator(options: ExposureSimulatorOptions = {}): HTMLElement {
+/** 露出シミュレーターの公開API */
+export interface ExposureSimulator {
+  root: HTMLElement;
+  /** ダイヤル値を外部から設定する（最近傍ステップへ丸める） */
+  setValues: (values: SimulatorValues) => void;
+}
+
+export function createExposureSimulator(options: ExposureSimulatorOptions = {}): ExposureSimulator {
   const state: DialState = {
     aperture: nearestStepIndex(APERTURE_STEPS, options.initial?.aperture ?? REFERENCE.aperture),
     shutter: nearestStepIndex(SHUTTER_STEPS, options.initial?.shutterSec ?? REFERENCE.shutterSec),
@@ -195,6 +202,14 @@ export function createExposureSimulator(options: ExposureSimulatorOptions = {}):
   root.setAttribute("aria-label", "露出シミュレーター");
   root.append(head, dials, meterSection, indicators);
 
+  const setValues = (values: SimulatorValues): void => {
+    state.aperture = nearestStepIndex(APERTURE_STEPS, values.aperture);
+    state.shutter = nearestStepIndex(SHUTTER_STEPS, values.shutterSec);
+    state.iso = nearestStepIndex(ISO_STEPS, values.iso);
+    state.nd = nearestStepIndex(ND_STEPS, values.nd ?? 0);
+    render();
+  };
+
   render();
-  return root;
+  return { root, setValues };
 }

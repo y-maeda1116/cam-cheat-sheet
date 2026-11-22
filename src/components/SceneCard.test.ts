@@ -47,3 +47,35 @@ describe("createSceneCard", () => {
     expect(card.getAttribute("aria-label")).toBe(`${scene.name}の推奨設定`);
   });
 });
+
+describe("createSceneCard: シミュレーター連携", () => {
+  beforeEach(() => {
+    document.body.replaceChildren();
+  });
+
+  it("onSimulate を渡えると「シミュレーターで試す」ボタンが出る", () => {
+    const scene = data.scenes[0]!;
+    let clicked: Scene | undefined;
+    const card = createSceneCard(scene, {
+      onSimulate: (s) => {
+        clicked = s;
+      },
+    });
+    document.body.append(card);
+
+    const button = [...card.querySelectorAll("button")].find(
+      (b) => b.textContent === "シミュレーターで試す"
+    );
+    expect(button).toBeDefined();
+    button!.click();
+    expect(clicked).toEqual(scene);
+  });
+
+  it("onSimulate を渡さないとボタンは出ない", () => {
+    const scene = data.scenes[0]!;
+    const card = createSceneCard(scene);
+    document.body.append(card);
+
+    expect(card.querySelector("button")).toBeNull();
+  });
+});

@@ -19,8 +19,13 @@ const terms = glossary as GlossaryData;
 
 const EMPTY_MESSAGE = "一致するシーンがありません。検索条件を変えてみてください。";
 
-function renderGrid(grid: HTMLElement, empty: HTMLElement, scenes: Scene[]): void {
-  grid.replaceChildren(...scenes.map(createSceneCard));
+function renderGrid(
+  grid: HTMLElement,
+  empty: HTMLElement,
+  scenes: Scene[],
+  onSimulate: (scene: Scene) => void
+): void {
+  grid.replaceChildren(...scenes.map((scene) => createSceneCard(scene, { onSimulate })));
   empty.hidden = scenes.length > 0;
 }
 
@@ -44,15 +49,24 @@ function mount(): void {
   const main = el("main", "mx-auto flex max-w-4xl flex-col gap-10 px-4 py-10");
 
   main.append(createHeader());
-  main.append(
-    createExposureSimulator({
-      initial: initial.simulator ?? undefined,
-      onChange: (values) => {
-        currentSim = values;
-        syncUrl();
-      },
-    })
-  );
+  const simulator = createExposureSimulator({
+    initial: initial.simulator ?? undefined,
+    onChange: (values) => {
+      currentSim = values;
+      syncUrl();
+    },
+  });
+  main.append(simulator.root);
+
+  /** シーンの推奨設定をシミュレーターへ読み込み、見える位置へスクロールする */
+  const loadIntoSimulator = (scene: Scene): void => {
+    simulator.setValues({
+      aperture: scene.aperture,
+      shutterSec: scene.shutterSec,
+      iso: scene.iso,
+    });
+    simulator.root.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const sheetHead = el("div", "flex flex-col gap-1");
   sheetHead.append(
@@ -71,7 +85,7 @@ function mount(): void {
       onFilterChange: (query, tags) => {
         currentQuery = query;
         currentTags = [...tags];
-        renderGrid(grid, empty, filterScenes(data.scenes, query, tags));
+        renderGrid(grid, empty, filterScenes(data.scenes, query, tags), loadIntoSimulator);
         syncUrl();
       },
     })
@@ -80,7 +94,7 @@ function mount(): void {
   main.append(createGlossary(terms.groups));
 
   app.replaceChildren(main);
-  renderGrid(grid, empty, filterScenes(data.scenes, currentQuery, currentTags));
+  renderGrid(grid, empty, filterScenes(data.scenes, currentQuery, currentTags), loadIntoSimulator);
 
   // PWA: 撮影現場など圏外でも開けるようサービスワーカーを登録する
   if ("serviceWorker" in navigator) {
