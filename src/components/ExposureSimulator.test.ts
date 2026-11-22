@@ -5,9 +5,16 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createExposureSimulator } from "./ExposureSimulator";
 
 function setup(): HTMLElement {
-  const root = createExposureSimulator();
-  document.body.replaceChildren(root);
-  return root;
+  const simulator = createExposureSimulator();
+  document.body.replaceChildren(simulator.root);
+  return simulator.root;
+}
+
+/** シミュレーターインスタンスをそのまま返す */
+function setupSimulator() {
+  const simulator = createExposureSimulator();
+  document.body.replaceChildren(simulator.root);
+  return simulator;
 }
 
 /** 露出オフセット表示(例: "+0.0 EV")を取得する */
@@ -56,6 +63,18 @@ describe("createExposureSimulator", () => {
     // 最大F値まで上げる
     for (let i = 0; i < 20 && !plus.disabled; i++) plus.click();
     expect(plus.disabled).toBe(true);
+  });
+
+  it("setValues でシーンの推奨設定を読み込める", () => {
+    const simulator = setupSimulator();
+
+    // ポートレート相当: f/1.8, 1/250秒, ISO 200
+    simulator.setValues({ aperture: 1.8, shutterSec: 1 / 250, iso: 200 });
+
+    const values = [...simulator.root.querySelectorAll("p.font-mono.text-xl")].map(
+      (p) => p.textContent
+    );
+    expect(values).toEqual(["f/1.8", "1/250", "ISO 200", "なし"]);
   });
 
   it("基準に戻すボタンでオフセット 0 EV に復帰する", () => {
