@@ -31,3 +31,28 @@ export interface Scene {
 export interface CameraSettingsData {
   scenes: Scene[];
 }
+
+/** 用語集の1項目 */
+export interface GlossaryEntry {
+  /** 一意ID */
+  id: string;
+  /** 用語名 */
+  term: string;
+  /** 解説本文 */
+  body: string;
+}
+
+/** 用語集のグループ（露出の基礎・カメラ側設定など） */
+export interface GlossaryGroup {
+  /** 一意ID */
+  id: string;
+  /** グループ見出し */
+  heading: string;
+  /** 用語一覧 */
+  entries: GlossaryEntry[];
+}
+
+/** glossary.json のルート構造 */
+export interface GlossaryData {
+  groups: GlossaryGroup[];
+}

@@ -2,7 +2,9 @@
 
 import "./style.css";
 import cameraSettings from "./data/cameraSettings.json";
+import glossary from "./data/glossary.json";
 import { createExposureSimulator } from "./components/ExposureSimulator";
+import { createGlossary } from "./components/Glossary";
 import { createHeader } from "./components/Header";
 import { createSceneCard } from "./components/SceneCard";
 import { createTagFilter } from "./components/TagFilter";
@@ -10,9 +12,10 @@ import { el } from "./components/dom";
 import { filterScenes } from "./lib/filter";
 import { decodeAppState, encodeAppState } from "./lib/urlState";
 import type { SimulatorValues } from "./lib/urlState";
-import type { CameraSettingsData, Scene } from "./types";
+import type { CameraSettingsData, GlossaryData, Scene } from "./types";
 
 const data = cameraSettings as CameraSettingsData;
+const terms = glossary as GlossaryData;
 
 const EMPTY_MESSAGE = "一致するシーンがありません。検索条件を変えてみてください。";
 
@@ -74,6 +77,7 @@ function mount(): void {
     })
   );
   main.append(grid, empty);
+  main.append(createGlossary(terms.groups));
 
   app.replaceChildren(main);
   renderGrid(grid, empty, filterScenes(data.scenes, currentQuery, currentTags));
