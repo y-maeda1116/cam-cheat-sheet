@@ -31,3 +31,7 @@ coverage/
 
 # Vitest (attachments / reports)
 .vitest/
+
+# Playwright
+test-results/
+playwright-report/
