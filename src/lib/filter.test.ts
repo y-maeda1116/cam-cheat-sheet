@@ -30,7 +30,7 @@ describe("filterScenes", () => {
       expect(scene.tags).toContain("low-light");
       expect(scene.tags).toContain("handheld");
     }
-    expect(result.map((scene) => scene.id)).toEqual(["indoor-event"]);
+    expect(result.map((scene) => scene.id)).toEqual(["indoor-event", "golden-hour", "aquarium"]);
     expect(filterScenes(scenes, "", ["low-light"]).map((s) => s.id)).toContain("night-star");
   });
 

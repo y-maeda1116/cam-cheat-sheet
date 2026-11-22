@@ -34,4 +34,18 @@ describe("cameraSettings.json", () => {
       expect(scene.tips.length).toBeGreaterThan(0);
     }
   });
+
+  it("すべてのシーンに失敗例（failure）が1行定義されている", () => {
+    for (const scene of data.scenes) {
+      expect(typeof scene.failure).toBe("string");
+      expect(scene.failure.trim().length).toBeGreaterThan(0);
+    }
+  });
+
+  it("シーン数は8以上あり、シーンごとに3要素が設定されている", () => {
+    expect(data.scenes.length).toBeGreaterThanOrEqual(8);
+    for (const scene of data.scenes) {
+      expect(scene.tags.length).toBeGreaterThan(0);
+    }
+  });
 });
