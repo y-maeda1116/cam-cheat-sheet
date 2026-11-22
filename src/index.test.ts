@@ -49,3 +49,12 @@ describe("cameraSettings.json", () => {
     }
   });
 });
+
+describe("アイコン登録表", () => {
+  it("すべてのシーンアイコンが ICON_REGISTRY に存在する", async () => {
+    const { ICON_REGISTRY } = await import("./components/icon");
+    for (const scene of data.scenes) {
+      expect(ICON_REGISTRY[scene.icon], `scene ${scene.id} の icon "${scene.icon}"`).toBeDefined();
+    }
+  });
+});
